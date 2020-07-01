@@ -2,44 +2,33 @@ package dijkstra;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
+import java.util.stream.Collectors;
 
 public class Dijkstra {
-	//Length between u and v equals to length[u][v]
-	private final int[][] oLength = {
-			{0, 7, 9, 0, 0,14},
-			{7, 0,10,15, 0, 0},
-			{9,10, 0,11, 0, 2},
-			{0,15,11, 0, 6, 0},
-			{0, 0, 0, 6, 0, 9},
-			{14,0, 2, 0, 9, 0},
-		};
-
-	private final List<Node> oNodes = new ArrayList<Node>();
-	private final List<Node> oCandidates = new ArrayList<Node>();
+	private final List<Node> oNodes;
+	private final List<Node> oCandidates;
 	private Node oNextNode = null;
 	
-	public void launch() {
-		
-		initialize(6);
-		
-		while(isContinue()) {
-			process();
-			System.out.println("oCandidates.size : " + oCandidates.size());
-			System.out.println("oNextNode : " + oNextNode);
+	public Dijkstra() {
+		List<Position> positions = Position.createPositions();
+		oNodes = Node.createNodes(positions);
+		createConnection();
+		oCandidates = new ArrayList<>(oNodes);
+		oNodes.get(0).setCost(0);
+		for(Node node : oNodes) {
+			node.printPositions();
+			System.out.println(node.getConnectedNodesNumber());
 		}
-		
-		System.out.println(oNodes.get(4).showRoot());
 	}
 	
-	private void initialize(int NodeNumber) {
-		for(int i = 0; i < NodeNumber; i++) {
-			Node node = new Node(i);
-			oNodes.add(node);
-			oCandidates.add(node);
+	public void launch() {
+		while(isContinue()) {
+			process();
+//			System.out.println("oCandidates.size : " + oCandidates.size());
+//			System.out.println("oNextNode : " + oNextNode);
 		}
 		
-		oNodes.get(0).setCost(0);
+		System.out.println(oNodes.get(6).showRoot());
 	}
 	
 	private boolean isContinue() {
@@ -51,32 +40,31 @@ public class Dijkstra {
 	
 	private void process() {
 		update();
-		for(Node node : getConnectedNodes()) {
-			if(node.getCost() > oNextNode.getCost() + getLength(node, oNextNode)) {
-				node.setCost(oNextNode.getCost() + getLength(node, oNextNode));
+		for(Node node : oNextNode.getConnectedNodes()) {
+			if (node.getCost() > oNextNode.getCost() + node.getDistance(oNextNode)) {
+				node.setCost(oNextNode.getCost() + node.getDistance(oNextNode));
 				node.setPrev(oNextNode);
+				System.out.println(node + " is updated");
+			} else {
+				System.out.println(node + " is NOT updated");
 			}
 		}
 	}
 	
 	private void update() {
 		System.out.println("oCandidates:" + oCandidates);
-		oNextNode = oCandidates.stream().min((nodeA,nodeB) -> nodeA.getCost() - nodeB.getCost()).get();
+		oNextNode = oCandidates.stream().min(Node::compareTo).get();
 		oCandidates.remove(oNextNode);
 	}
 	
-	private List<Node> getConnectedNodes(){
-		List<Node> connectedNodes = new ArrayList<Node>();
-		for(int i = 0; i < 6; i++) {
-			if(oLength[oNextNode.getId()][i] != 0) {
-				connectedNodes.add(oNodes.get(i));
+	private void createConnection() {
+		for(Node node : oNodes) {
+			node.setConnectedNodes(
+					oNodes.stream().filter(n -> n.isWithinRange(node)).collect(Collectors.toList())
+					);
+			if(node.getConnectedNodesNumber() == 0) {
+				node.setMinimumDistanceNode(oNodes);
 			}
 		}
-		
-		return connectedNodes;
-	}
-	
-	private int getLength(Node a, Node b) {
-		return oLength[a.getId()][b.getId()];
 	}
 }	
