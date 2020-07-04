@@ -16,9 +16,10 @@ public class Presenter extends JPanel {
     private static final int SAMPLE_COUNT = 1000;
     private static final Presenter cPresenter = new Presenter();
     private JPanel oPlotPanel;
+    private JFrame oFrame;
     private DataTable oData = new DataTable(Integer.class, Integer.class);
 
-    public static Presenter getInstane(){
+    public static Presenter getInstance(){
         return cPresenter;
     }
 
@@ -26,9 +27,7 @@ public class Presenter extends JPanel {
         super(new BorderLayout());
         setPreferredSize(new Dimension(800, 600));
         setBackground(Color.WHITE);
-
-        oPlotPanel = createPlot(oData);
-        add(oPlotPanel, BorderLayout.CENTER);
+        showInFrame();
     }
 
     private String getTitle() {
@@ -39,13 +38,13 @@ public class Presenter extends JPanel {
         return String.format("Scatter plot with %d data points", SAMPLE_COUNT);
     }
 
-    protected JFrame showInFrame() {
-        JFrame frame = new JFrame(getTitle());
-        frame.getContentPane().add(this, BorderLayout.CENTER);
-        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        frame.setSize(getPreferredSize());
-        frame.setVisible(true);
-        return frame;
+    private JFrame showInFrame() {
+        oFrame = new JFrame(getTitle());
+        oFrame.getContentPane().add(this, BorderLayout.CENTER);
+        oFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        oFrame.setSize(getPreferredSize());
+        oFrame.setVisible(true);
+        return oFrame;
     }
 
     private JPanel createPlot(DataTable aData){
@@ -55,6 +54,12 @@ public class Presenter extends JPanel {
         // Format plot
         plot.setInsets(new Insets2D.Double(20.0, 40.0, 40.0, 40.0));
         plot.getTitle().setText(getDescription());
+        plot.getAxisRenderer(XYPlot.AXIS_X).setTickSpacing(10.0);
+        plot.getAxisRenderer(XYPlot.AXIS_Y).setTickSpacing(10.0);
+        plot.getAxis(XYPlot.AXIS_X).setMin(-10);
+        plot.getAxis(XYPlot.AXIS_X).setMax(110);
+        plot.getAxis(XYPlot.AXIS_Y).setMin(-10);
+        plot.getAxis(XYPlot.AXIS_Y).setMax(110);
 
         // Format points
         plot.getPointRenderers(aData).get(0).setColor(COLOR1);
@@ -63,11 +68,12 @@ public class Presenter extends JPanel {
     }
 
     public void updatePanel(List<Node> aNodes){
-        remove(oPlotPanel);
+        removeAll();
         oData.clear();
         for(Node node : aNodes){
             oData.add(node.getPosition().oX, node.getPosition().oY);
         }
         add(createPlot(oData), BorderLayout.CENTER);
+        oFrame.revalidate();
     }
 }

@@ -20,9 +20,8 @@ public class Dijkstra {
 			node.printPositions();
 			System.out.println(node.getConnectedNodesNumber());
 		}
-		oPresenter = Presenter.getInstane();
+		oPresenter = Presenter.getInstance();
 		oPresenter.updatePanel(oNodes);
-		oPresenter.showInFrame();
 	}
 	
 	public void launch() {
@@ -59,6 +58,12 @@ public class Dijkstra {
 		System.out.println("oCandidates:" + oCandidates);
 		oNextNode = oCandidates.stream().min(Node::compareTo).get();
 		oCandidates.remove(oNextNode);
+		oPresenter.updatePanel(oCandidates);
+		try{
+			Thread.sleep(50);
+		}catch(InterruptedException e){
+			e.printStackTrace();
+		}
 	}
 	
 	private void createConnection() {
