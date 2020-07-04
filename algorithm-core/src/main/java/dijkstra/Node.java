@@ -44,6 +44,10 @@ public class Node implements Comparable<Node>{
 	public void setCost(double aCost) {
 		oCost = aCost;
 	}
+
+	public Position getPosition(){
+		return oPosition;
+	}
 	
 	public double getCost() {
 		return oCost;

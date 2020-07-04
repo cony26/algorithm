@@ -8,6 +8,7 @@ public class Dijkstra {
 	private final List<Node> oNodes;
 	private final List<Node> oCandidates;
 	private Node oNextNode = null;
+	private final Presenter oPresenter;
 	
 	public Dijkstra() {
 		List<Position> positions = Position.createPositions();
@@ -19,6 +20,9 @@ public class Dijkstra {
 			node.printPositions();
 			System.out.println(node.getConnectedNodesNumber());
 		}
+		oPresenter = Presenter.getInstane();
+		oPresenter.updatePanel(oNodes);
+		oPresenter.showInFrame();
 	}
 	
 	public void launch() {
