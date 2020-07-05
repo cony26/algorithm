@@ -6,7 +6,7 @@ import java.util.List;
 public class Node implements Comparable<Node>{
 	public static final int NODE_NUMBER = 50;
 	private static final int CONNECTED_LENGTH = 20;
-	private boolean oIsAlive;
+	private boolean oIsAlive = true;
 	private boolean oIsVisited;
 	private final int oId;
 	private final Position oPosition;
@@ -56,6 +56,10 @@ public class Node implements Comparable<Node>{
 	public Node getPrev() {
 		return oPrev;
 	}
+
+	public void setIsAlive(boolean aIsAlive){ oIsAlive = aIsAlive;}
+
+	public boolean isAlive(){return oIsAlive;}
 	
 	public String showRoot() {
 		StringBuilder builder = new StringBuilder();

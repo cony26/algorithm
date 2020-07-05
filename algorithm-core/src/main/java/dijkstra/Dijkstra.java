@@ -20,8 +20,7 @@ public class Dijkstra {
 			node.printPositions();
 			System.out.println(node.getConnectedNodesNumber());
 		}
-		oPresenter = Presenter.getInstance();
-		oPresenter.updatePanel(oNodes);
+		oPresenter = Presenter.createPresenter(oNodes);
 	}
 	
 	public void launch() {
@@ -57,13 +56,11 @@ public class Dijkstra {
 	private void update() {
 		System.out.println("oCandidates:" + oCandidates);
 		oNextNode = oCandidates.stream().min(Node::compareTo).get();
+		oNextNode.setIsAlive(false);
 		oCandidates.remove(oNextNode);
-		oPresenter.updatePanel(oCandidates);
-		try{
-			Thread.sleep(50);
-		}catch(InterruptedException e){
-			e.printStackTrace();
-		}
+		oPresenter.updatePanel(oNodes);
+		sleepForMoment(100);
+
 	}
 	
 	private void createConnection() {
@@ -74,6 +71,14 @@ public class Dijkstra {
 			if(node.getConnectedNodesNumber() == 0) {
 				node.setMinimumDistanceNode(oNodes);
 			}
+		}
+	}
+
+	private void sleepForMoment(int aTime){
+		try{
+			Thread.sleep(aTime);
+		}catch(InterruptedException e){
+			e.printStackTrace();
 		}
 	}
 }	
