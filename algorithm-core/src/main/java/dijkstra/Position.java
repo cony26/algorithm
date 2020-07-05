@@ -10,6 +10,8 @@ class Position {
 	public final int oY;
 	private static final int X_RANGE = 100;
 	private static final int Y_RANGE = 100;
+	public static Position START = new Position(0,0);
+	public static Position END = new Position(100, 100);
 	private Position(int aX, int aY) {
 		oX = aX;
 		oY = aY;
@@ -17,8 +19,9 @@ class Position {
 	public static List<Position> createPositions() {
 		List<Position> positions = new ArrayList<>();
 		Random random = new Random();
-		
-		for(int i = 0; i < Node.NODE_NUMBER; i++) {
+
+		positions.add(START);
+		for(int i = 1; i < Node.NODE_NUMBER - 1; i++) {
 			while(true) {
 				int x = random.nextInt(X_RANGE);
 				int y = random.nextInt(Y_RANGE);
@@ -30,6 +33,7 @@ class Position {
 				}
 			}
 		}
+		positions.add(END);
 		
 		return positions;
 	}

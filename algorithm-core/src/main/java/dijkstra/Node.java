@@ -6,13 +6,17 @@ import java.util.List;
 public class Node implements Comparable<Node>{
 	public static final int NODE_NUMBER = 50;
 	private static final int CONNECTED_LENGTH = 20;
+	private static final int MAX_CONNECTED_NODE_NUMBER = 5;
+	public static final int INITIAL_COST = 1000;
+	public static final Node START_NODE = new Node(0, Position.START);
+	public static final Node END_NODE = new Node(NODE_NUMBER - 1, Position.END);
 	private boolean oIsAlive = true;
 	private boolean oIsVisited;
 	private final int oId;
 	private final Position oPosition;
 	private Node oPrev = null;
-	private double oCost = 1000;
-	private List<Node> oConnectedNodes = null;
+	private double oCost = INITIAL_COST;
+	private List<Node> oConnectedNodes = new ArrayList<>();
 	
 	private Node(int aId, Position aPosition) {
 		oId = aId;
@@ -21,9 +25,11 @@ public class Node implements Comparable<Node>{
 	
 	public static List<Node> createNodes(List<Position> aPositions){
 		List<Node> nodes = new ArrayList<>();
-		for(int i = 0; i < NODE_NUMBER; i++) {
+		nodes.add(START_NODE);
+		for(int i = 1; i < NODE_NUMBER - 1; i++) {
 			nodes.add(new Node(i, aPositions.get(i)));
 		}
+		nodes.add(END_NODE);
 		
 		return nodes;
 	}
@@ -85,12 +91,19 @@ public class Node implements Comparable<Node>{
 	}
 	
 	public void setConnectedNodes(List<Node> aConnectedNodes) {
-		oConnectedNodes = aConnectedNodes;
+		if(aConnectedNodes.size() > MAX_CONNECTED_NODE_NUMBER){
+			oConnectedNodes.addAll(aConnectedNodes.subList(0,MAX_CONNECTED_NODE_NUMBER));
+		}else {
+			oConnectedNodes.addAll(aConnectedNodes);
+		}
 	}
 	
 	public void setMinimumDistanceNode(List<Node> oNodes) {
 		Node minDistanceNode = null;
 		for(Node node : oNodes) {
+			if(node.equals(this)){
+				continue;
+			}
 			if(minDistanceNode == null) {
 				minDistanceNode = node;
 			}
