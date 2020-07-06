@@ -9,8 +9,7 @@ import de.erichseifert.gral.ui.InteractivePanel;
 
 import javax.swing.*;
 import java.awt.*;
-import java.util.ArrayList;
-import java.util.Random;
+import java.util.*;
 import java.util.List;
 
 public class Presenter extends JPanel {
@@ -89,15 +88,47 @@ public class Presenter extends JPanel {
 
     private List<DataTable> createLineDataTable(List<Node> aNodes){
         List<DataTable> lineDataTables = new ArrayList<>();
+        Map<Node, List<Node>> map = new HashMap<>();
+        for(Node node : aNodes){
+            map.put(node, new ArrayList<Node>(node.getConnectedNodes()));
+        }
 
         for(Node node : aNodes){
-            DataTable connectedData = new DataTable(Integer.class, Integer.class);
-            connectedData.add(node.getPosition().oX, node.getPosition().oY);
-            for(Node connectedNode : node.getConnectedNodes()){
-                connectedData.add(connectedNode.getPosition().oX, connectedNode.getPosition().oY);
+            if(map.get(node) == null){
+                continue;
             }
-            lineDataTables.add(connectedData);
+            for(Node connectedNode : map.get(node)){
+                if(map.get(connectedNode).contains(node)){
+                    map.get(connectedNode).remove(node);
+                }
+            }
         }
+
+        for(Node node : aNodes){
+            System.out.print("Map : " + node + " : [" );
+            for(Node node2 : map.get(node)){
+                System.out.print(node2 + " , ");
+            }
+            System.out.println("]");
+        }
+
+        for(Node node : aNodes){
+            for(Node connectedNode : map.get(node)){
+                DataTable connectedData = new DataTable(Integer.class, Integer.class);
+                connectedData.add(node.getPosition().oX, node.getPosition().oY);
+                connectedData.add(connectedNode.getPosition().oX, connectedNode.getPosition().oY);
+                lineDataTables.add(connectedData);
+            }
+        }
+
+//        for(Node node : aNodes){
+//            DataTable connectedData = new DataTable(Integer.class, Integer.class);
+//            connectedData.add(node.getPosition().oX, node.getPosition().oY);
+//            for(Node connectedNode : node.getConnectedNodes()){
+//                connectedData.add(connectedNode.getPosition().oX, connectedNode.getPosition().oY);
+//            }
+//            lineDataTables.add(connectedData);
+//        }
 
         return lineDataTables;
     }

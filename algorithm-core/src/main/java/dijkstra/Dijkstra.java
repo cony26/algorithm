@@ -44,12 +44,28 @@ public class Dijkstra {
 		if(oCandidates.size() == 0) {
 			return false;
 		}
-		oNextNode = oCandidates.stream().min(Node::compareTo).get();
 
-		if(count != 0 && oNextNode.getConnectedNodes().stream().allMatch(node -> node.getCost() == Node.INITIAL_COST)){
-			System.out.println("not reached");
+		if(Node.END_NODE.getConnectedNodes().stream().noneMatch(node -> node.isAlive())){
+			Node.END_NODE.setIsAlive(false);
+			oPresenter.updatePanel(oNodes);
 			return false;
 		}
+
+		List<Node> connectedNodes = Node.candidatesConnectedRemovedNodes(oCandidates, oRemovedNodes);
+		if(count != 0 && connectedNodes.size() == 0 && Node.END_NODE.getPrev() == null){
+			System.out.println("not reached");
+			return false;
+		}else{
+			if(count == 0) {
+				oNextNode = oCandidates.stream().min(Node::compareTo).get();
+			}else {
+				oNextNode = connectedNodes.stream().min(Node::compareTo).get();
+			}
+		}
+//		if(count != 0 && oNextNode.getConnectedNodes().stream().allMatch(node -> node.getCost() == Node.INITIAL_COST)){
+//			System.out.println("not reached");
+//			return false;
+//		}
 
 		oNextNode.setIsAlive(false);
 		oCandidates.remove(oNextNode);

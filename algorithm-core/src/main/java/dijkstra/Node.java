@@ -8,7 +8,6 @@ import java.util.stream.Collectors;
 public class Node implements Comparable<Node>{
 	public static final int NODE_NUMBER = 50;
 	private static final int CONNECTED_LENGTH = 20;
-	private static final int MAX_CONNECTED_NODE_NUMBER = 5;
 	public static final int INITIAL_COST = 1000;
 	public static final Node START_NODE = new Node(0, Position.START){
 		@Override
@@ -99,11 +98,7 @@ public class Node implements Comparable<Node>{
 	}
 	
 	public void setConnectedNodes(List<Node> aConnectedNodes) {
-		if(aConnectedNodes.size() > MAX_CONNECTED_NODE_NUMBER){
-			oConnectedNodes.addAll(aConnectedNodes.subList(0,MAX_CONNECTED_NODE_NUMBER));
-		}else {
-			oConnectedNodes.addAll(aConnectedNodes);
-		}
+		oConnectedNodes.addAll(aConnectedNodes);
 	}
 	
 	public void setMinimumDistanceNode(List<Node> oNodes) {
@@ -145,7 +140,7 @@ public class Node implements Comparable<Node>{
 		System.out.println("(x,y) = (" + oPosition.oX + " , " + oPosition.oY + ")");
 	}
 
-	public List<Node> candidatesConnectedRemovedNodes(List<Node> aCandidates, List<Node> aRemovedNodes){
+	public static List<Node> candidatesConnectedRemovedNodes(List<Node> aCandidates, List<Node> aRemovedNodes){
 		List<Node> connectedNodes = new ArrayList<>();
 		for(Node removedNode : aRemovedNodes){
 			connectedNodes.addAll(
