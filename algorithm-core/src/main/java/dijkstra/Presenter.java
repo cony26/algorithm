@@ -24,6 +24,19 @@ public class Presenter extends JPanel {
     private final DataTable oDataDead = new DataTable(Integer.class, Integer.class);
     private final List<DataTable> oLineDataTables;
 
+    private Presenter(List<Node> aNodes) {
+        super(new BorderLayout());
+        setPreferredSize(new Dimension(800, 600));
+        setBackground(Color.WHITE);
+
+        oLineDataTables = createLineDataTable(aNodes);
+        oPlot = new XYPlot(getAllDataTableArray());
+        setNodeToDataTable(aNodes);
+        add(createPlot(), BorderLayout.CENTER);
+
+        showInFrame();
+    }
+
     public static Presenter createPresenter(List<Node> aNodes){
         return new Presenter(aNodes);
     }
@@ -36,27 +49,13 @@ public class Presenter extends JPanel {
         repaint();
     }
 
-    private JFrame showInFrame() {
+    public JFrame showInFrame() {
         JFrame frame = new JFrame(getTitle());
         frame.getContentPane().add(this, BorderLayout.CENTER);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setSize(getPreferredSize());
         frame.setVisible(true);
         return frame;
-    }
-
-    private Presenter(List<Node> aNodes) {
-        super(new BorderLayout());
-        setPreferredSize(new Dimension(800, 600));
-        setBackground(Color.WHITE);
-
-        oLineDataTables = createLineDataTable(aNodes);
-        setNodeToDataTable(aNodes);
-        oPlot = new XYPlot(getAllDataTableArray());
-        add(createPlot(), BorderLayout.CENTER);
-
-        showInFrame();
-        updatePanel(aNodes);
     }
 
     private String getTitle() {
@@ -73,16 +72,16 @@ public class Presenter extends JPanel {
         oPlot.getTitle().setText(getDescription());
         oPlot.getAxisRenderer(XYPlot.AXIS_X).setTickSpacing(10.0);
         oPlot.getAxisRenderer(XYPlot.AXIS_Y).setTickSpacing(10.0);
-
         // Format points
         LineRenderer lines = new DefaultLineRenderer2D();
         for(DataTable data : oLineDataTables){
             oPlot.setLineRenderers(data, lines);
             oPlot.getLineRenderers(data).get(0).setColor(BLACK);
+            oPlot.getPointRenderers(data).get(0).setColor(Color.WHITE);
         }
+
         oPlot.getPointRenderers(oDataAlive).get(0).setColor(BLUE);
         oPlot.getPointRenderers(oDataDead).get(0).setColor(RED);
-
         setRange(oPlot);
 
         return new InteractivePanel(oPlot);

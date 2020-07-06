@@ -2,14 +2,22 @@ package dijkstra;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collector;
+import java.util.stream.Collectors;
 
 public class Node implements Comparable<Node>{
 	public static final int NODE_NUMBER = 50;
 	private static final int CONNECTED_LENGTH = 20;
 	private static final int MAX_CONNECTED_NODE_NUMBER = 5;
 	public static final int INITIAL_COST = 1000;
-	public static final Node START_NODE = new Node(0, Position.START);
-	public static final Node END_NODE = new Node(NODE_NUMBER - 1, Position.END);
+	public static final Node START_NODE = new Node(0, Position.START){
+		@Override
+		public String toString(){return "START_NODE";}
+	};
+	public static final Node END_NODE = new Node(NODE_NUMBER - 1, Position.END){
+		@Override
+		public String toString(){return "END_NODE";}
+	};
 	private boolean oIsAlive = true;
 	private boolean oIsVisited;
 	private final int oId;
@@ -113,6 +121,7 @@ public class Node implements Comparable<Node>{
 			}
 		}
 		oConnectedNodes.add(minDistanceNode);
+		minDistanceNode.getConnectedNodes().add(this);
 	}
 	
 	public int getConnectedNodesNumber() {
@@ -134,5 +143,17 @@ public class Node implements Comparable<Node>{
 	
 	public void printPositions() {
 		System.out.println("(x,y) = (" + oPosition.oX + " , " + oPosition.oY + ")");
+	}
+
+	public List<Node> candidatesConnectedRemovedNodes(List<Node> aCandidates, List<Node> aRemovedNodes){
+		List<Node> connectedNodes = new ArrayList<>();
+		for(Node removedNode : aRemovedNodes){
+			connectedNodes.addAll(
+					removedNode.getConnectedNodes().stream()
+							.filter(node -> !connectedNodes.contains(node))
+							.collect(Collectors.toList())
+			);
+		}
+		return aCandidates.stream().filter(node -> connectedNodes.contains(node)).collect(Collectors.toList());
 	}
 }
