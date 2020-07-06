@@ -48,6 +48,7 @@ public class Dijkstra {
 		if(Node.END_NODE.getConnectedNodes().stream().noneMatch(node -> node.isAlive())){
 			Node.END_NODE.setIsAlive(false);
 			oPresenter.updatePanel(oNodes);
+			oPresenter.highLightLine();
 			return false;
 		}
 

@@ -22,6 +22,7 @@ public class Presenter extends JPanel {
     private final DataTable oDataAlive = new DataTable(Integer.class, Integer.class);
     private final DataTable oDataDead = new DataTable(Integer.class, Integer.class);
     private final List<DataTable> oLineDataTables;
+    private final Map<Set<Node>, DataTable> oSetMap = new HashMap<>();
 
     private Presenter(List<Node> aNodes) {
         super(new BorderLayout());
@@ -115,6 +116,7 @@ public class Presenter extends JPanel {
                 connectedData.add(node.getPosition().oX, node.getPosition().oY);
                 connectedData.add(connectedNode.getPosition().oX, connectedNode.getPosition().oY);
                 lineDataTables.add(connectedData);
+                oSetMap.put(new HashSet<Node>(Arrays.asList(node, connectedNode)), connectedData);
             }
         }
 
@@ -154,5 +156,24 @@ public class Presenter extends JPanel {
     private void setRange(XYPlot aPlot){
         oPlot.getAxis(XYPlot.AXIS_X).setRange(-10,110);
         oPlot.getAxis(XYPlot.AXIS_Y).setRange(-10,110);
+    }
+
+    public void highLightLine(){
+        List<Set<Node>> list = new ArrayList<>();
+
+        Node node1 = Node.END_NODE;
+        Node node2 = Node.END_NODE.getPrev();
+        while(node2 != null){
+            list.add(new HashSet<Node>(Arrays.asList(node1, node2)));
+            node1 = node2;
+            node2 = node2.getPrev();
+        }
+
+        LineRenderer lines = new DefaultLineRenderer2D();
+        for(Set set : list) {
+            oPlot.setLineRenderers(oSetMap.get(set), lines);
+            oPlot.getLineRenderers(oSetMap.get(set)).get(0).setColor(BLUE);
+        }
+
     }
 }
