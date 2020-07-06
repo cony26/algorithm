@@ -94,9 +94,6 @@ public class Presenter extends JPanel {
         }
 
         for(Node node : aNodes){
-            if(map.get(node) == null){
-                continue;
-            }
             for(Node connectedNode : map.get(node)){
                 if(map.get(connectedNode).contains(node)){
                     map.get(connectedNode).remove(node);
