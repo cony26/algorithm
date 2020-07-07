@@ -120,15 +120,6 @@ public class Presenter extends JPanel {
             }
         }
 
-//        for(Node node : aNodes){
-//            DataTable connectedData = new DataTable(Integer.class, Integer.class);
-//            connectedData.add(node.getPosition().oX, node.getPosition().oY);
-//            for(Node connectedNode : node.getConnectedNodes()){
-//                connectedData.add(connectedNode.getPosition().oX, connectedNode.getPosition().oY);
-//            }
-//            lineDataTables.add(connectedData);
-//        }
-
         return lineDataTables;
     }
 
