@@ -8,8 +8,8 @@ import java.util.Random;
 class Position {
 	public final int oX;
 	public final int oY;
-	private static final int X_RANGE = 100;
-	private static final int Y_RANGE = 100;
+	public static final int X_RANGE = 100;
+	public static final int Y_RANGE = 100;
 	public static Position START = new Position(0,0);
 	public static Position END = new Position(100, 100);
 	private Position(int aX, int aY) {

@@ -1,12 +1,8 @@
 package dijkstra;
 
-import org.omg.CORBA.NO_IMPLEMENT;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
-
-import static java.lang.System.exit;
 
 public class Dijkstra {
 	private final List<Node> oNodes;
@@ -27,7 +23,7 @@ public class Dijkstra {
 			node.printPositions();
 			System.out.println(node.getConnectedNodesNumber());
 		}
-		oPresenter = Presenter.createPresenter(oNodes);
+		oPresenter = SwingPresenter.createPresenter(oNodes);
 	}
 	
 	public void launch() {
@@ -48,7 +44,7 @@ public class Dijkstra {
 		if(Node.END_NODE.getConnectedNodes().stream().noneMatch(node -> node.isAlive())){
 			Node.END_NODE.setIsAlive(false);
 			oPresenter.updatePanel(oNodes);
-			oPresenter.highLightLine();
+			oPresenter.highLightPathPlan();
 			return false;
 		}
 
