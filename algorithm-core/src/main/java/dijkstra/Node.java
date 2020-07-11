@@ -7,7 +7,7 @@ import java.util.stream.Collectors;
 
 public class Node implements Comparable<Node>{
 	public static final int NODE_NUMBER = 80;
-	private static final int CONNECTED_LENGTH = 30;
+	private static final int CONNECTED_LENGTH = 20;
 	public static final int INITIAL_COST = 1000;
 	public static final Node START_NODE = new Node(0, Position.START){
 		@Override

@@ -13,7 +13,8 @@ public class Dijkstra {
 	private int count = 0;
 	
 	public Dijkstra() {
-		List<Position> positions = Position.createPositions();
+		List<Position> positions = Position.createRandomPositions();
+//		List<Position> positions = Position.createConstantPositions();
 		oNodes = Node.createNodes(positions);
 		createConnection();
 		oCandidates = new ArrayList<>(oNodes);
