@@ -1,5 +1,10 @@
 package dijkstra;
 
+import algorithm.algorithm_core.Node;
+import algorithm.algorithm_core.Position;
+import algorithm.algorithm_core.Presenter;
+import algorithm.algorithm_core.SwingPresenter;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -13,7 +18,7 @@ public class Dijkstra {
 	private int count = 0;
 	
 	public Dijkstra() {
-		List<Position> positions = Position.createRandomPositions();
+		List<Position> positions = Position.createRandomPositions(Node.NODE_NUMBER);
 //		List<Position> positions = Position.createConstantPositions();
 		oNodes = Node.createNodes(positions);
 		createConnection();

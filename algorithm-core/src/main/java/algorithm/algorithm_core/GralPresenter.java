@@ -1,4 +1,4 @@
-package dijkstra;
+package algorithm.algorithm_core;
 
 import de.erichseifert.gral.data.DataTable;
 import de.erichseifert.gral.graphics.Insets2D;

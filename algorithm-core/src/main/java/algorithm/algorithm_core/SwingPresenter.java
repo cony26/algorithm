@@ -1,6 +1,4 @@
-package dijkstra;
-
-import com.sun.corba.se.impl.orbutil.graph.Graph;
+package algorithm.algorithm_core;
 
 import javax.swing.*;
 import java.awt.*;

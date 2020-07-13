@@ -1,11 +1,11 @@
-package dijkstra;
+package algorithm.algorithm_core;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
 //this class is immutable
-class Position {
+public class Position {
 	public final int oX;
 	public final int oY;
 	public static final int X_RANGE = 100;
@@ -16,42 +16,50 @@ class Position {
 		oX = aX;
 		oY = aY;
 	}
-	public static List<Position> createRandomPositions() {
+	public static List<Position> createRandomPositions(int aNodeNumber) {
 		List<Position> positions = new ArrayList<>();
 		Random random = new Random();
 
-		positions.add(START);
-		for(int i = 1; i < Node.NODE_NUMBER - 1; i++) {
-			while(true) {
-				int x = random.nextInt(X_RANGE);
-				int y = random.nextInt(Y_RANGE);
-				Position newPosition = new Position(x, y);
-			
-				if(!positions.contains(newPosition)) {
-					positions.add(newPosition);
-					break;
+		for(int i = 0; i < aNodeNumber; i++) {
+			if(i == 0){
+				positions.add(START);
+			}else if(i == aNodeNumber - 1){
+				positions.add(END);
+			}else {
+				while (true) {
+					int x = random.nextInt(X_RANGE);
+					int y = random.nextInt(Y_RANGE);
+					Position newPosition = new Position(x, y);
+
+					if (!positions.contains(newPosition)) {
+						positions.add(newPosition);
+						break;
+					}
 				}
 			}
 		}
-		positions.add(END);
-		
+
 		return positions;
 	}
 
-	public static List<Position> createConstantPositions(){
+	public static List<Position> createConstantPositions(int aNodeNumber){
 		List<Position> positions = new ArrayList<>();
-		positions.add(START);
 		int x = 10;
 		int y = 10;
-		for(int i = 1; i < Node.NODE_NUMBER - 1; i++) {
+		for(int i = 0; i < aNodeNumber; i++) {
+			if(i == 0){
+				positions.add(START);
+			}else if(i == aNodeNumber - 1){
+				positions.add(END);
+			}else {
 				positions.add(new Position(x, y));
 				x += 10;
-				if(x > X_RANGE){
+				if (x > X_RANGE) {
 					x = 10;
 					y += 10;
 				}
+			}
 		}
-		positions.add(END);
 		return positions;
 	}
 	

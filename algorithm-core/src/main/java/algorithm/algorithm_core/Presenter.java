@@ -1,4 +1,4 @@
-package dijkstra;
+package algorithm.algorithm_core;
 
 import java.util.List;
 
