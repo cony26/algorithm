@@ -21,10 +21,7 @@ public class Dijkstra {
 		oCandidates = new ArrayList<>(oNodes);
 		oRemovedNodes = new ArrayList<>();
 		Node.START_NODE.setCost(0);
-		for(Node node : oNodes) {
-			node.printPositions();
-			System.out.println(node.getConnectedNodesNumber());
-		}
+		Helper.printNodeDetails(oNodes);
 		oPresenter = SwingPresenter.createPresenter(oNodes);
 	}
 	
@@ -34,7 +31,7 @@ public class Dijkstra {
 			count++;
 		}
 		
-		System.out.println(Node.END_NODE.showRoot());
+		Helper.printCalculatedPath();
 	}
 	
 	private boolean isContinue() {

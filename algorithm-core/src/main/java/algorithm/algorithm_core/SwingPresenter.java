@@ -84,10 +84,17 @@ public class SwingPresenter extends JFrame implements Presenter {
 
         private void paintPoint(Graphics g){
             for(Node node : oNodes){
-                if(node.isAlive()){
-                    g.setColor(BLUE);
-                }else{
+//                if(node.isAlive()){
+//                    g.setColor(BLUE);
+//                }else{
+//                    g.setColor(RED);
+//                }
+                if(node.getStatus() == Node.States.NONE){
+                    g.setColor(BLACK);
+                }else if(node.getStatus() == Node.States.CLOSE){
                     g.setColor(RED);
+                }else{
+                    g.setColor(BLUE);
                 }
                 g.fillOval(convertX(node.getPosition().oX),
                         convertY(node.getPosition().oY),

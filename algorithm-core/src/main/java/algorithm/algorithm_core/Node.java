@@ -1,13 +1,20 @@
 package algorithm.algorithm_core;
 
+import sun.management.snmp.jvmmib.EnumJvmMemManagerState;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
 public class Node implements Comparable<Node>{
-	public static final int NODE_NUMBER = 80;
-	private static final int CONNECTED_LENGTH = 20;
+	public static final int NODE_NUMBER = 250;
+	private static final int CONNECTED_LENGTH = 15;
 	public static final int INITIAL_COST = 1000;
+	public static enum States{
+		NONE,
+		CLOSE,
+		OPEN;
+	}
 	public static final Node START_NODE = new Node(0, Position.START){
 		@Override
 		public String toString(){return "START_NODE";}
@@ -17,6 +24,7 @@ public class Node implements Comparable<Node>{
 		public String toString(){return "END_NODE";}
 	};
 	private boolean oIsAlive = true;
+	private States oStatus = States.NONE;
 	private boolean oIsVisited;
 	private final int oId;
 	private final Position oPosition;
@@ -85,6 +93,14 @@ public class Node implements Comparable<Node>{
 	public void setIsAlive(boolean aIsAlive){ oIsAlive = aIsAlive;}
 
 	public boolean isAlive(){return oIsAlive;}
+
+	public States getStatus(){
+		return oStatus;
+	}
+
+	public void setStatus(States aState){
+		oStatus = aState;
+	}
 	
 	public String showRoot() {
 		StringBuilder builder = new StringBuilder();
