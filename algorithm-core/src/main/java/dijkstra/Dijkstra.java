@@ -1,9 +1,6 @@
 package dijkstra;
 
-import algorithm.algorithm_core.Node;
-import algorithm.algorithm_core.Position;
-import algorithm.algorithm_core.Presenter;
-import algorithm.algorithm_core.SwingPresenter;
+import algorithm.algorithm_core.*;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -21,7 +18,6 @@ public class Dijkstra {
 		List<Position> positions = Position.createRandomPositions(Node.NODE_NUMBER);
 //		List<Position> positions = Position.createConstantPositions();
 		oNodes = Node.createNodes(positions);
-		createConnection();
 		oCandidates = new ArrayList<>(oNodes);
 		oRemovedNodes = new ArrayList<>();
 		Node.START_NODE.setCost(0);
@@ -84,25 +80,8 @@ public class Dijkstra {
 		}
 
 		oPresenter.updatePanel(oNodes);
-		sleepForMoment(100);
+		Helper.sleepForMoment(100);
 	}
 	
-	private void createConnection() {
-		for(Node node : oNodes) {
-			node.setConnectedNodes(
-					oNodes.stream().filter(n -> n.isWithinRange(node)).collect(Collectors.toList())
-					);
-			if(node.getConnectedNodesNumber() == 0) {
-				node.setMinimumDistanceNode(oNodes);
-			}
-		}
-	}
 
-	private void sleepForMoment(int aTime){
-		try{
-			Thread.sleep(aTime);
-		}catch(InterruptedException e){
-			e.printStackTrace();
-		}
-	}
 }	

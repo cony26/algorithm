@@ -36,8 +36,21 @@ public class Node implements Comparable<Node>{
 			nodes.add(new Node(i, aPositions.get(i)));
 		}
 		nodes.add(END_NODE);
+
+		createConnection(nodes);
 		
 		return nodes;
+	}
+
+	private static void createConnection(List<Node> aNodes) {
+		for(Node node : aNodes) {
+			node.setConnectedNodes(
+					aNodes.stream().filter(n -> n.isWithinRange(node)).collect(Collectors.toList())
+			);
+			if(node.getConnectedNodesNumber() == 0) {
+				node.setMinimumDistanceNode(aNodes);
+			}
+		}
 	}
 	
 	@Override
@@ -139,9 +152,9 @@ public class Node implements Comparable<Node>{
 		System.out.println("(x,y) = (" + oPosition.oX + " , " + oPosition.oY + ")");
 	}
 
-	public static List<Node> candidatesConnectedRemovedNodes(List<Node> aCandidates, List<Node> aRemovedNodes){
+	public static List<Node> candidatesConnectedRemovedNodes(List<Node> aCandidates, List<Node> aRemovedNodes) {
 		List<Node> connectedNodes = new ArrayList<>();
-		for(Node removedNode : aRemovedNodes){
+		for (Node removedNode : aRemovedNodes) {
 			connectedNodes.addAll(
 					removedNode.getConnectedNodes().stream()
 							.filter(node -> !connectedNodes.contains(node))
