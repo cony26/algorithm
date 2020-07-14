@@ -23,6 +23,7 @@ public class GralPresenter extends JPanel implements Presenter{
     private final DataTable oDataDead = new DataTable(Integer.class, Integer.class);
     private final List<DataTable> oLineDataTables;
     private final Map<Set<Node>, DataTable> oSetMap = new HashMap<>();
+    private ColorProvider oColorProvider;
 
     private GralPresenter(List<Node> aNodes) {
         super(new BorderLayout());
@@ -41,6 +42,7 @@ public class GralPresenter extends JPanel implements Presenter{
         return new GralPresenter(aNodes);
     }
 
+    @Override
     public void updatePanel(List<Node> aNodes){
         oDataAlive.clear();
         oDataDead.clear();
@@ -56,6 +58,11 @@ public class GralPresenter extends JPanel implements Presenter{
         frame.setSize(getPreferredSize());
         frame.setVisible(true);
         return frame;
+    }
+
+    @Override
+    public void setColorProvider(ColorProvider aColorProvider){
+        oColorProvider = aColorProvider;
     }
 
     private String getTitle() {
@@ -149,6 +156,7 @@ public class GralPresenter extends JPanel implements Presenter{
         oPlot.getAxis(XYPlot.AXIS_Y).setRange(-10,110);
     }
 
+    @Override
     public void highLightPathPlan(){
         List<Set<Node>> list = new ArrayList<>();
 

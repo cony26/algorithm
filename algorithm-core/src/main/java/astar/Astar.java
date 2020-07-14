@@ -2,6 +2,7 @@ package astar;
 
 import algorithm.algorithm_core.*;
 
+import java.awt.*;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -24,6 +25,18 @@ public class Astar {
         oCloseList = new ArrayList<>();
         Helper.printNodeDetails(oNodes);
         oPresenter = SwingPresenter.createPresenter(oNodes);
+        oPresenter.setColorProvider(new ColorProvider() {
+            @Override
+            public void setPointColor(Graphics g, Node aNode) {
+                if(aNode.getStatus() == Node.States.NONE){
+                    g.setColor(BLACK);
+                }else if(aNode.getStatus() == Node.States.CLOSE){
+                    g.setColor(RED);
+                }else{
+                    g.setColor(BLUE);
+                }
+            }
+        });
     }
 
     public void launch(){

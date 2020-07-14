@@ -2,6 +2,7 @@ package dijkstra;
 
 import algorithm.algorithm_core.*;
 
+import java.awt.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -23,6 +24,16 @@ public class Dijkstra {
 		Node.START_NODE.setCost(0);
 		Helper.printNodeDetails(oNodes);
 		oPresenter = SwingPresenter.createPresenter(oNodes);
+		oPresenter.setColorProvider(new ColorProvider() {
+			@Override
+			public void setPointColor(Graphics g, Node aNode) {
+				if(aNode.isAlive()){
+					g.setColor(BLUE);
+				}else{
+					g.setColor(RED);
+				}
+			}
+		});
 	}
 	
 	public void launch() {

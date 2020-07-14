@@ -11,6 +11,7 @@ public class SwingPresenter extends JFrame implements Presenter {
     private static final int WIDTH = 600;
     private static final int HEIGHT = 600;
     private static final int MARGIN = 50;
+    private ColorProvider oColorProvider;
 
     private SwingPresenter(List<Node> aNodes){
         oCanvas = new PlotCanvas(aNodes);
@@ -43,10 +44,12 @@ public class SwingPresenter extends JFrame implements Presenter {
         oCanvas.highLightPathPlan(list);
     }
 
+    @Override
+    public void setColorProvider(ColorProvider aColorProvider){
+        oColorProvider = aColorProvider;
+    }
+
     private class PlotCanvas extends Canvas{
-        private final Color BLUE = new Color( 55, 170, 200);
-        private final Color RED = new Color(200,  80,  75);
-        private final Color BLACK = new Color(0,  0,  0);
         //Coefficient unit is %
         private final int X_COEFFICIENT = 100 * SwingPresenter.WIDTH / Position.X_RANGE;
         private final int Y_COEFFICIENT = 100 * SwingPresenter.HEIGHT / Position.Y_RANGE;
@@ -84,18 +87,7 @@ public class SwingPresenter extends JFrame implements Presenter {
 
         private void paintPoint(Graphics g){
             for(Node node : oNodes){
-//                if(node.isAlive()){
-//                    g.setColor(BLUE);
-//                }else{
-//                    g.setColor(RED);
-//                }
-                if(node.getStatus() == Node.States.NONE){
-                    g.setColor(BLACK);
-                }else if(node.getStatus() == Node.States.CLOSE){
-                    g.setColor(RED);
-                }else{
-                    g.setColor(BLUE);
-                }
+                oColorProvider.setPointColor(g, node);
                 g.fillOval(convertX(node.getPosition().oX),
                         convertY(node.getPosition().oY),
                         radius * 2, radius * 2);
@@ -104,7 +96,7 @@ public class SwingPresenter extends JFrame implements Presenter {
 
         private void paintString(Graphics g){
             for(Node node : oNodes){
-                g.setColor(BLACK);
+                oColorProvider.setStringColor(g);
                 g.drawString(Integer.toString(node.getId()),
                         convertX(node.getPosition().oX),
                         convertY(node.getPosition().oY));
@@ -112,7 +104,7 @@ public class SwingPresenter extends JFrame implements Presenter {
         }
 
         private void paintLine(Graphics g){
-            g.setColor(BLACK);
+            oColorProvider.setLineColor(g);
             for(Node node : oNodes){
                 for(Node connectedNode : oLineMap.get(node)){
                     g.drawLine(convertX(node.getPosition().oX) + radius,
@@ -123,7 +115,7 @@ public class SwingPresenter extends JFrame implements Presenter {
             }
 
             if(!oPathList.isEmpty()){
-                g.setColor(BLUE);
+                oColorProvider.setPathColor(g);
                 for(int i = 0; i < oPathList.size() - 1; i++){
                     Graphics2D g2 = (Graphics2D)g;
                     g2.setStroke(new BasicStroke(5));

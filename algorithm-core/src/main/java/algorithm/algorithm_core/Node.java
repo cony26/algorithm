@@ -7,7 +7,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 public class Node implements Comparable<Node>{
-	public static final int NODE_NUMBER = 250;
+	public static final int NODE_NUMBER = 450;
 	private static final int CONNECTED_LENGTH = 15;
 	public static final int INITIAL_COST = 1000;
 	public static enum States{
