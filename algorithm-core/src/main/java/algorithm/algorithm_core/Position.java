@@ -11,6 +11,7 @@ import java.util.Random;
 public class Position {
 	public final int oZ = 1;
 	public final int oX;
+	public final int oT = 3;
 	public final int oY;
 	public static final int X_RANGE = 100;
 	public static final int Y_RANGE = 100;
