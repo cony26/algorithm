@@ -1,11 +1,15 @@
 package algorithm.algorithm_core;
 
+import jdk.nashorn.internal.ir.annotations.Immutable;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
 //this class is immutable
+@Immutable
 public class Position {
+	public final int oZ = 1;
 	public final int oX;
 	public final int oY;
 	public static final int X_RANGE = 100;
