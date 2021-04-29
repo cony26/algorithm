@@ -23,7 +23,8 @@ public class Dijkstra {
 		oRemovedNodes = new ArrayList<>();
 		Node.START_NODE.setCost(0);
 		Helper.printNodeDetails(oNodes);
-		oPresenter = SwingPresenter.createPresenter(oNodes);
+//		oPresenter = SwingPresenter.createPresenter(oNodes);
+		oPresenter = GralPresenter.createPresenter(oNodes);
 		oPresenter.setColorProvider(new ColorProvider() {
 			@Override
 			public void setPointColor(Graphics g, Node aNode) {
