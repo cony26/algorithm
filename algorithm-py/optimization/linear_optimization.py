@@ -95,7 +95,8 @@ def lp_simplex(c, A, b):
             i += 1
             continue
         x = np.zeros(n)
-        x[basis] = linalg.solve(A[:, basis], b)
+        Binv = np.linalg.inv(A[:, basis])
+        x[basis] = np.dot(Binv, b)
 
         if np.all(x[basis] >= 0):
             print('basis:', basis)
@@ -120,7 +121,7 @@ def lp_simplex(c, A, b):
             print('Optimal')
             print('Optimal value=', np.dot(c[basis].T, bbar))
             x[basis] = linalg.solve(A[:, basis], b)
-            print('x = ', x[basis])
+            print('x = ', x)
             break
         else:
             index = 0
@@ -144,12 +145,115 @@ def lp_simplex(c, A, b):
                             indextheta = j
                 nonbasis[index], basis[indextheta] = basis[indextheta], nonbasis[index]
 
+def onePhasesimplex(c, A, b):
+    (m, n) = A.shape
+    basis = [j for j in range(m)]
+    nonbasis = [m + j for j in range(n - m)]
+    x = np.zeros(n)
 
-A = np.array([[1, 1, 1, 0, 0],
-              [1, 3, 0, 1, 0],
+    return searchFromBasis(c, A, b, basis, nonbasis)
+
+def searchFromBasis(c, A, b, basis, nonbasis):
+    (m,n) = A.shape
+    x = np.zeros(n)
+    while True:
+        print('nextB:', A[:, basis])
+        Binv = np.linalg.inv(A[:, basis])
+        y = np.dot(Binv.T, c[basis])
+        cn = c[nonbasis] - np.dot(A[:, nonbasis].T, y)
+        bbar = np.dot(Binv, b)
+        if np.all(cn <= 0):
+            print('Optimal')
+            print('Optimal value=', np.dot(c[basis].T, bbar))
+            x[basis] = linalg.solve(A[:, basis], b)
+            print('x = ', x)
+            return basis, nonbasis
+        else:
+            index = 0
+            for j in range(len(cn)):
+                if cn[j] > 0:
+                    index = j
+                    break
+            Nbar = np.dot(Binv, A[:, nonbasis])
+            ak = Nbar[:, index]
+
+            if np.all(ak <= 0):
+                print('not bounded')
+                break
+            else:
+                theta = np.inf
+                indextheta = 0
+                for j in range(len(bbar)):
+                    if ak[j] > 0:
+                        if theta > bbar[j] / ak[j]:
+                            theta = bbar[j] / ak[j]
+                            indextheta = j
+                nonbasis[index], basis[indextheta] = basis[indextheta], nonbasis[index]
+
+    return None
+
+def twoPhaseSimplex(c, A, b):
+    min = np.min(b)
+    if min < 0:
+        print('x = 0 is not feasible solution')
+        print('search with two phase simplex method')
+        (m,n) = A.shape
+        x0 = np.ones(m).reshape(-1,1)
+        AA = np.hstack((A, x0))
+        cc = np.hstack((np.zeros(n), np.array([-1,])))
+        basis, nonbasis = onePhasesimplex(cc, AA, b)
+
+        if n in basis:
+            basis.remove(n)
+        if n in nonbasis:
+            nonbasis.remove(n)
+
+        print('[feasible basis list]')
+        print('basis:',basis)
+        print('nonbasis:', nonbasis)
+        searchFromBasis(c, A, b, basis, nonbasis)
+
+
+# A = np.array([[1, 1, 1, 0, 0],
+#               [1, 3, 0, 1, 0],
+#               [2, 1, 0, 0, 1]])
+# b = np.array([6, 12, 10])
+# c = np.array([1, 2, 0, 0, 0])
+# A = np.array([[1, 1, 1, 0, 0, 0],
+#               [3, 4, 6, 0, 1, 0],
+#               [4, 5, 3, 0, 0, 1]])
+# b = np.array([20, 100, 100])
+# c = np.array([4, 8, 10, 0, 0, 0])
+
+# A = np.array([[2, 2, -1, 1, 0, 0],
+#               [3, -2, 1, 0, 1, 0],
+#               [1, -3, 1, 0, 0, 1]])
+# b = np.array([10, 10, 10])
+# c = np.array([1, 3, -1, 0, 0, 0])
+
+# A = np.array([[1, 0, 1, 0],
+#               [20, 1, 0, 1]])
+# b = np.array([1, 100])
+# c = np.array([10, 1, 0, 0])
+
+# A = np.array([[-1, -4, -2, 1, 0],
+#               [-3, -2, 0, 0, 1]])
+# b = np.array([-8, -6])
+# c = np.array([-2, -3, -1, 0, 0])
+
+# A = np.array([[2, -1, 2, 1, 0, 0],
+#               [2, -3, 1, 0, 1, 0],
+#               [-1, 1, -2, 0, 0, 1]])
+# b = np.array([4, -5, -1])
+# c = np.array([1, -1, 1, 0, 0, 0])
+
+A = np.array([[1, -1, 1, 0, 0],
+              [-1, -1, 0, 1, 0],
               [2, 1, 0, 0, 1]])
-b = np.array([6, 12, 10])
-c = np.array([1, 2, 0, 0, 0])
+b = np.array([-1, -3, 2])
+c = np.array([3, 1, 0, 0, 0])
 
 # lp_RevisedSimplex(c, A, b)
-lp_simplex(c.T, A, b.T)
+# lp_simplex(c.T, A, b.T)
+
+twoPhaseSimplex(c.T, A, b.T)
