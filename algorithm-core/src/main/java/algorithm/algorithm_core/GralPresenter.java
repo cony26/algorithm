@@ -173,6 +173,10 @@ public class GralPresenter extends JPanel implements Presenter{
             oPlot.setLineRenderers(oSetMap.get(set), lines);
             oPlot.getLineRenderers(oSetMap.get(set)).get(0).setColor(BLUE);
         }
+    }
 
+    @Override
+    public void highLightPathPlan(List<Node> aNodes) {
+        //TODO:implement
     }
 }

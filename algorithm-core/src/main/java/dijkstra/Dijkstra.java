@@ -18,7 +18,7 @@ public class Dijkstra {
 	public Dijkstra() {
 		List<Position> positions = Position.createRandomPositions(Node.NODE_NUMBER);
 //		List<Position> positions = Position.createConstantPositions();
-		oNodes = Node.createNodes(positions);
+		oNodes = Node.createNodes(positions, Node.ConnectionCreator.RANDOM);
 		oCandidates = new ArrayList<>(oNodes);
 		oRemovedNodes = new ArrayList<>();
 		Node.START_NODE.setCost(0);

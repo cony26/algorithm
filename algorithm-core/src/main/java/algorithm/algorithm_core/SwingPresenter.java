@@ -13,8 +13,8 @@ public class SwingPresenter extends JFrame implements Presenter {
     private static final int MARGIN = 50;
     private ColorProvider oColorProvider;
 
-    private SwingPresenter(List<Node> aNodes){
-        oCanvas = new PlotCanvas(aNodes);
+    private SwingPresenter(List<Node> aNodes, boolean aIsConnectedLinePaint){
+        oCanvas = new PlotCanvas(aNodes, aIsConnectedLinePaint);
         oCanvas.setPreferredSize(new Dimension(WIDTH, HEIGHT));
         oCanvas.setBackground(Color.WHITE);
         getContentPane().add(oCanvas);
@@ -23,8 +23,8 @@ public class SwingPresenter extends JFrame implements Presenter {
         setResizable(false);
         setVisible(true);
     }
-    public static Presenter createPresenter(List<Node> aNodes){
-        return new SwingPresenter(aNodes);
+    public static Presenter createPresenter(List<Node> aNodes, boolean aIsConnectedLinePaint){
+        return new SwingPresenter(aNodes, aIsConnectedLinePaint);
     }
 
     @Override
@@ -45,6 +45,11 @@ public class SwingPresenter extends JFrame implements Presenter {
     }
 
     @Override
+    public void highLightPathPlan(List<Node> aNodes) {
+        oCanvas.highLightPathPlan(aNodes);
+    }
+
+    @Override
     public void setColorProvider(ColorProvider aColorProvider){
         oColorProvider = aColorProvider;
     }
@@ -55,12 +60,14 @@ public class SwingPresenter extends JFrame implements Presenter {
         private final int Y_COEFFICIENT = 100 * SwingPresenter.HEIGHT / Position.Y_RANGE;
         private final int radius = 6;
         private final List<Node> oNodes;
+        private final boolean oIsPaintConnectedLine;
         private List<Node> oPathList = new ArrayList<>();
         private boolean isPaintLine = true;
         Map<Node, List<Node>> oLineMap = new HashMap<>();
 
-        public PlotCanvas(List<Node> aNodes){
+        public PlotCanvas(List<Node> aNodes, boolean aIsPaintConnectedLine){
             oNodes = aNodes;
+            oIsPaintConnectedLine = aIsPaintConnectedLine;
             createLineData(aNodes);
         }
 
@@ -69,7 +76,8 @@ public class SwingPresenter extends JFrame implements Presenter {
             paintPoint(g);
             if(isPaintLine) {
                 paintString(g);
-                paintLine(g);
+                paintConnectedLine(g);
+                highLightPathPlan(g);
                 isPaintLine = false;
             }
         }
@@ -103,7 +111,11 @@ public class SwingPresenter extends JFrame implements Presenter {
             }
         }
 
-        private void paintLine(Graphics g){
+        private void paintConnectedLine(Graphics g){
+            if(!oIsPaintConnectedLine){
+                return;
+            }
+
             oColorProvider.setLineColor(g);
             for(Node node : oNodes){
                 for(Node connectedNode : oLineMap.get(node)){
@@ -114,6 +126,9 @@ public class SwingPresenter extends JFrame implements Presenter {
                 }
             }
 
+        }
+
+        private void highLightPathPlan(Graphics g){
             if(!oPathList.isEmpty()){
                 oColorProvider.setPathColor(g);
                 for(int i = 0; i < oPathList.size() - 1; i++){

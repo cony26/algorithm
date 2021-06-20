@@ -18,13 +18,13 @@ public class Astar {
 
     public Astar(){
         List<Position> positions = Position.createRandomPositions(Node.NODE_NUMBER);
-        oNodes = Node.createNodes(positions);
+        oNodes = Node.createNodes(positions, Node.ConnectionCreator.RANDOM);
         oOpenList = new ArrayList<>();
         oOpenList.add(Node.START_NODE);
         Node.START_NODE.setStatus(Node.States.OPEN);
         oCloseList = new ArrayList<>();
         Helper.printNodeDetails(oNodes);
-        oPresenter = SwingPresenter.createPresenter(oNodes);
+        oPresenter = SwingPresenter.createPresenter(oNodes, true);
         oPresenter.setColorProvider(new ColorProvider() {
             @Override
             public void setPointColor(Graphics g, Node aNode) {

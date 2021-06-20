@@ -15,6 +15,11 @@ public class Node implements Comparable<Node>{
 		CLOSE,
 		OPEN;
 	}
+
+	public static enum ConnectionCreator{
+		RANDOM,
+		ALL;
+	}
 	public static final Node START_NODE = new Node(0, Position.START){
 		@Override
 		public String toString(){return "START_NODE";}
@@ -37,27 +42,38 @@ public class Node implements Comparable<Node>{
 		oPosition = aPosition;
 	}
 	
-	public static List<Node> createNodes(List<Position> aPositions){
+	public static List<Node> createNodes(List<Position> aPositions, ConnectionCreator aConnectionCreator){
 		List<Node> nodes = new ArrayList<>();
 		nodes.add(START_NODE);
-		for(int i = 1; i < NODE_NUMBER - 1; i++) {
+		for(int i = 1; i < aPositions.size(); i++) {
 			nodes.add(new Node(i, aPositions.get(i)));
 		}
 		nodes.add(END_NODE);
 
-		createConnection(nodes);
+		createConnection(nodes, aConnectionCreator);
 		
 		return nodes;
 	}
 
-	private static void createConnection(List<Node> aNodes) {
-		for(Node node : aNodes) {
-			node.setConnectedNodes(
-					aNodes.stream().filter(n -> n.isWithinRange(node)).collect(Collectors.toList())
-			);
-			if(node.getConnectedNodesNumber() == 0) {
-				node.setMinimumDistanceNode(aNodes);
-			}
+	private static void createConnection(List<Node> aNodes, ConnectionCreator aConnectionCreator) {
+		switch (aConnectionCreator){
+			case RANDOM:
+				for(Node node : aNodes) {
+					node.setConnectedNodes(
+							aNodes.stream().filter(n -> n.isWithinRange(node)).collect(Collectors.toList())
+					);
+					if(node.getConnectedNodesNumber() == 0) {
+						node.setMinimumDistanceNode(aNodes);
+					}
+				}
+				break;
+			case ALL:
+				for(Node node : aNodes) {
+					node.setConnectedNodes(
+							aNodes.stream().filter(n -> !n.equals(node)).collect(Collectors.toList())
+					);
+				}
+				break;
 		}
 	}
 	
@@ -117,7 +133,7 @@ public class Node implements Comparable<Node>{
 		return Math.sqrt((this.oPosition.oX - aNode.oPosition.oX) * (this.oPosition.oX - aNode.oPosition.oX) + (this.oPosition.oY - aNode.oPosition.oY) * (this.oPosition.oY - aNode.oPosition.oY));
 	}
 	
-	public boolean isWithinRange(Node aNode) {
+	private boolean isWithinRange(Node aNode) {
 		if(aNode == this) {
 			return false;
 		}
@@ -125,11 +141,11 @@ public class Node implements Comparable<Node>{
 		return getDistance(aNode) <= CONNECTED_LENGTH;
 	}
 	
-	public void setConnectedNodes(List<Node> aConnectedNodes) {
+	private void setConnectedNodes(List<Node> aConnectedNodes) {
 		oConnectedNodes.addAll(aConnectedNodes);
 	}
 	
-	public void setMinimumDistanceNode(List<Node> oNodes) {
+	private void setMinimumDistanceNode(List<Node> oNodes) {
 		Node minDistanceNode = null;
 		for(Node node : oNodes) {
 			if(node.equals(this)){
