@@ -3,12 +3,10 @@ package hamiltonian;
 import algorithm.algorithm_core.*;
 import groovy.util.PermutationGenerator;
 
-import java.awt.*;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-import static java.lang.Math.cos;
 import static java.lang.Math.min;
 
 public class HamiltonianDPCalculator {
